@@ -34,11 +34,13 @@ DownArrow = 40,
 canvas,
 ctx,
 keystate,
+
 /**
  * The player paddle
  *
  * @type {Object}
  */
+
 player = {
 	x: null,
 	y: null,
@@ -99,6 +101,7 @@ ball = {
 	vel: null,
 	side:  20,
 	speed: 12,
+
 	/**
 	 * Serves the ball towards the specified side
 	 *
@@ -119,6 +122,7 @@ ball = {
 			y: this.speed*Math.sin(phi)
 		}
 	},
+
 	/**
 	 * Update the ball position and keep it within the canvas
 	 */
