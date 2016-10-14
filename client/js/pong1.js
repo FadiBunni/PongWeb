@@ -10,13 +10,14 @@ window.onload = function() {
 
 	var score = [0,0];
 	var scoreInc = 10;
+	var count = 6000;
+	var currentCountDown = createCountDown(count);
 
 	var winner = false;
 
 	var players = [
 		new Player("left"),
 		new Player("right")
-
 	];
 
 	var ball = new Ball();
@@ -30,15 +31,17 @@ window.onload = function() {
 			down: false
 		}
 	}
-	setInterval(draw, 33);
+
+	setInterval(draw, 20);
+
 
 	function Ball() {
 		this.x = W / 2;
 		this.y = H / 2;
 		this.style = "white";
 		this.size = 10;
-		this.velx = ranInt(0,1) == 0 ? -10 : 10;
-		this.vely = ranInt(0,1) == 0 ? -10 : 10;
+		this.velx = ranInt(0,1) == 0 ? -5 : 5;
+		this.vely = ranInt(0,1) == 0 ? -5 : 5;
 
 		this.draw = function (){
 			ctx.beginPath();
@@ -88,7 +91,7 @@ window.onload = function() {
 		this.side = side;
 		this.style = side == "left" ? "red" : "blue";
 		this.sizeWidth = 25;
-		this.sizeLength = 100;
+		this.sizeLength = 140;
 
 		this.x = side == "left" ? 100 : W-100;
 		this.y = (H / 2) - (this.sizeLength / 2);
@@ -116,6 +119,7 @@ window.onload = function() {
 					this.y -= this.speed;
 				}
 			}
+			// paddle stops at inner canvas.
 			if(this.y < 0) {
 				this.y = 0;
 			} else if(this.y > H - this.sizeLength){
@@ -130,10 +134,14 @@ window.onload = function() {
 		ctx.fillStyle = "black";
 		ctx.fillRect(0,0,W,H);
 
+
+
 		if(winner != false){
 			var text = winner == 1 ? "Player 1 Wins!" : "Player 2 Wins!";
 			var color = winner == 1 ? "red" : "blue";
 			var score2 = winner == 1 ? score[0] : score[1];
+			var countDownValue = currentCountDown();
+
 
 			ctx.font = "40px Arial";
 			ctx.fillStyle = color;
@@ -141,6 +149,15 @@ window.onload = function() {
 			ctx.font = "16px Arial";
 			ctx.fillStyle = "white";
 			ctx.fillText("Scored: " + score2, 30, 30 + H / 2);
+
+		 	if(countDownValue > 0){
+		 		ctx.font = "40px Arial";
+		 		ctx.fillStyle = "white";
+		 		ctx.fillText("restart in " + (countDownValue/1000).toFixed(0) + " seconds", W / 2 - 200, H / 2);
+		 	}else if (countDownValue < 0){
+		 		location.reload();
+		 	}
+
 		}
 
 		for (var i = 0; i < players.length; i++){
@@ -151,6 +168,8 @@ window.onload = function() {
 		ball.draw();
 		ball.update();
 
+
+
 		ctx.font = "16px Arial";
 		ctx.fillStyle = "white";
 		ctx.fillText("Player 1: " + score[0], 15, 35);
@@ -159,7 +178,7 @@ window.onload = function() {
 
 	function resizeCanvas() {
 
-		H = window.innerWidth,
+		W = window.innerWidth;
 		H = window.innerHeight;
 
 		canvas.width = W;
@@ -219,4 +238,11 @@ function ranInt (Min, Max) {
 
 Array.prototype.contains = function(item){
 	return (this.indexOf(item) != -1);
+}
+
+function createCountDown(timeRemaining) {
+    var startTime = new Date().getTime();
+    return function() {
+    return timeRemaining - ( new Date().getTime() - startTime );
+    }
 }
